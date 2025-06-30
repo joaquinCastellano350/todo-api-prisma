@@ -1,8 +1,4 @@
-import { PrismaClient } from '../../generated/prisma/client.js'
-import { User } from './user.entity.js';
-
-export const db = new PrismaClient();
-
+import db from '../config/prisma.js'
 interface CreateUserInput {
     name: string;
     email: string;
