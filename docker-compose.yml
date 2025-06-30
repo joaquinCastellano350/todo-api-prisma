@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: todo-api-prisma
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=todolist
+      - POSTGRES_PASSWORD=admintodo
+      - POSTGRES_DB=todo-list
+
+volumes:
+  postgres_data:
+    driver: local
+
