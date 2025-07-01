@@ -1,5 +1,4 @@
-import { PrismaClient } from '../../generated/prisma/client.js';
-export const db = new PrismaClient();
+import db from '../config/prisma.js';
 export class UserRepository {
     async createUser(data) {
         const createdUser = await db.user.create({ data });

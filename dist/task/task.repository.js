@@ -1,8 +1,6 @@
-import db from '../config/prisma.js'
-
-
+import db from '../config/prisma.js';
 export class TaskRepository {
-    async create( data: { title: string; description: string; userId: number; }) {
+    async create(data) {
         const task = await db.task.create({
             data: {
                 title: data.title,
@@ -14,7 +12,7 @@ export class TaskRepository {
                 title: true,
                 description: true
             }
-        })
+        });
         return task;
     }
     async findAll() {
@@ -22,3 +20,4 @@ export class TaskRepository {
         return tasks;
     }
 }
+//# sourceMappingURL=task.repository.js.map
