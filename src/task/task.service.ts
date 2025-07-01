@@ -2,14 +2,35 @@ import { TaskRepository } from "./task.repository.js";
 
 const taskRepository = new TaskRepository()
 export class TaskService {
-    async delete(taskId: string) {
-        await taskRepository.delete(parseInt(taskId));
-        return;
+    async delete(taskId: string, userId: number) {
+        const taskUserId = await taskRepository.findUserByTask(parseInt(taskId))
+        if (!taskUserId) throw new Error('Task not found.')
+
+        if (taskUserId.authorId == userId){
+            try {
+            await taskRepository.delete(parseInt(taskId));
+            return;
+            }catch(error){
+                return error;
+            }
+        }
+        throw new Error('No authorization to delete the post.')
+    
     }
     async updateTask(taskId: any, data: { title: any; description: any; userId: number; }) {
-
-        const id = parseInt(taskId);
-        const task = await taskRepository.update(id,data);
+        const taskUserId = await taskRepository.findUserByTask(parseInt(taskId))
+        if (!taskUserId) throw new Error('Task not found.')
+        
+        if (taskUserId.authorId == data.userId){
+            const tid = parseInt(taskId);
+            try{
+            const task = await taskRepository.update(tid,data);
+            return task;
+            }catch(error){
+                return error;
+            }
+        }
+        throw new Error('No authorization to update the post.')
     }
     async createTask(data: { title: string; description: string; userId: number; }) {
         
@@ -18,13 +39,14 @@ export class TaskService {
         }
         
         try {
-            const task = taskRepository.create(data);
+            const task = await taskRepository.create(data);
             return task;
         }catch(error){
             return error
         }
     }
     async findAllTasks() {
-        return await taskRepository.findAll();
+        const tasks = await taskRepository.findAll();
+        return tasks
     }
 }

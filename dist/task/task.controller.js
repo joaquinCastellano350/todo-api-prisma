@@ -3,7 +3,7 @@ const taskService = new TaskService();
 export class TaskController {
     async findAllTasks(req, res) {
         try {
-            const tasks = taskService.findAllTasks();
+            const tasks = await taskService.findAllTasks();
             res.status(201).json({ tasks });
         }
         catch (error) {
@@ -27,16 +27,17 @@ export class TaskController {
         const { title, description } = req.body;
         try {
             const task = await taskService.updateTask(taskId, { title, description, userId });
-            res.status(204).json({ task });
+            res.status(201).json({ task });
         }
         catch (error) {
             res.status(400).json({ error });
         }
     }
     async deleteTask(req, res) {
+        const userId = req.userId;
         const taskId = req.params.id;
         try {
-            await taskService.delete(taskId);
+            await taskService.delete(taskId, userId);
             res.status(204);
         }
         catch (error) {

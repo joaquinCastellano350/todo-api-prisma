@@ -8,11 +8,18 @@ export class TaskRepository {
             data: {
                 title: data.title,
                 description: data.description
+            },
+            select: {
+                id: true,
+                title: true,
+                description: true
             }
         })
+        return task
     }
     async delete(taskId: number) {
         await db.task.delete({where: {id: taskId}});
+        return;
     }
     async create( data: { title: string; description: string; userId: number; }) {
         const task = await db.task.create({
@@ -32,5 +39,13 @@ export class TaskRepository {
     async findAll() {
         const tasks = await db.task.findMany();
         return tasks;
+    }
+
+    async findUserByTask(id: number){
+
+        const user = db.task.findUnique({
+            where: {id},
+        })
+        return user
     }
 }

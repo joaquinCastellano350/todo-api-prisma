@@ -6,11 +6,18 @@ export class TaskRepository {
             data: {
                 title: data.title,
                 description: data.description
+            },
+            select: {
+                id: true,
+                title: true,
+                description: true
             }
         });
+        return task;
     }
     async delete(taskId) {
         await db.task.delete({ where: { id: taskId } });
+        return;
     }
     async create(data) {
         const task = await db.task.create({
@@ -30,6 +37,12 @@ export class TaskRepository {
     async findAll() {
         const tasks = await db.task.findMany();
         return tasks;
+    }
+    async findUserByTask(id) {
+        const user = db.task.findUnique({
+            where: { id },
+        });
+        return user;
     }
 }
 //# sourceMappingURL=task.repository.js.map

@@ -7,7 +7,8 @@ const taskService = new TaskService()
 export class TaskController{
     async findAllTasks(req: Request, res: Response){
         try{
-            const tasks = taskService.findAllTasks()
+            const tasks = await taskService.findAllTasks()
+
             res.status(201).json({tasks})
         }catch(error){
             res.status(501).json({errorMessage: "Internal Error.", errorCode: "INTERNAL_ERROR"})
@@ -31,15 +32,17 @@ export class TaskController{
         const {title, description} = req.body
         try{
             const task = await taskService.updateTask(taskId, {title,description,userId});
-            res.status(204).json({task})
+
+            res.status(201).json({task})
         }catch(error){
             res.status(400).json({error})
         }
     }
     async deleteTask(req: AuthenticatedRequest, res: Response) {
+        const userId = req.userId!
         const taskId = req.params.id;
         try {
-            await taskService.delete(taskId)
+            await taskService.delete(taskId, userId)
             res.status(204)
         } catch(error){
             res.status(400).json({error})
